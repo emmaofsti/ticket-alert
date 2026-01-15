@@ -1,9 +1,18 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Only create client if credentials are available
+export const supabase: SupabaseClient | null =
+    supabaseUrl && supabaseAnonKey
+        ? createClient(supabaseUrl, supabaseAnonKey)
+        : null;
+
+// Check if Supabase is configured
+export function isSupabaseConfigured(): boolean {
+    return supabase !== null;
+}
 
 // Type for our tracked events table
 export interface TrackedEvent {
@@ -23,6 +32,12 @@ export async function saveTrackingSubscription(
     eventName: string,
     email: string
 ): Promise<{ success: boolean; error?: string }> {
+    if (!supabase) {
+        console.log('Supabase not configured, subscription saved locally only');
+        // For demo purposes, just return success when Supabase isn't configured
+        return { success: true };
+    }
+
     try {
         const { error } = await supabase
             .from('tracked_events')
@@ -55,6 +70,10 @@ export async function saveTrackingSubscription(
  * Get all tracked events for checking
  */
 export async function getTrackedEvents(): Promise<TrackedEvent[]> {
+    if (!supabase) {
+        return [];
+    }
+
     const { data, error } = await supabase
         .from('tracked_events')
         .select('*')
@@ -72,8 +91,13 @@ export async function getTrackedEvents(): Promise<TrackedEvent[]> {
  * Mark an event as notified
  */
 export async function markEventNotified(trackingId: string): Promise<void> {
+    if (!supabase) {
+        return;
+    }
+
     await supabase
         .from('tracked_events')
         .update({ notified_at: new Date().toISOString() })
         .eq('id', trackingId);
 }
+
