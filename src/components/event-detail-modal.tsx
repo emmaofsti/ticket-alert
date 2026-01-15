@@ -205,13 +205,13 @@ export function EventDetailModal({ artist, isOpen, onClose }: EventDetailModalPr
                                             </Button>
                                         ) : (
                                             <div className="space-y-3">
-                                                <div className="p-3 rounded-lg bg-orange-500/10 border border-orange-500/20">
-                                                    <div className="flex items-center gap-2 text-orange-500 text-sm font-medium mb-1">
-                                                        <Bell className="w-4 h-4" />
-                                                        Få varsel om resale-billetter
+                                                <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+                                                    <div className="flex items-center gap-2 text-amber-400 font-medium mb-2">
+                                                        <Bell className="w-5 h-5" />
+                                                        Få varsel om resale
                                                     </div>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        Vi varsler deg når noen legger ut billetter for videresalg
+                                                    <p className="text-sm text-muted-foreground">
+                                                        Vi varsler deg på e-post når billetter blir tilgjengelig
                                                     </p>
                                                 </div>
 
@@ -221,28 +221,33 @@ export function EventDetailModal({ artist, isOpen, onClose }: EventDetailModalPr
                                                         Du vil få varsel på e-post!
                                                     </div>
                                                 ) : (
-                                                    <div className="flex gap-2">
+                                                    <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                                                         <div className="relative flex-1">
-                                                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                                                             <Input
                                                                 type="email"
                                                                 placeholder="din@epost.no"
                                                                 value={email}
                                                                 onChange={(e) => setEmail(e.target.value)}
-                                                                className="pl-9"
+                                                                onClick={(e) => e.stopPropagation()}
+                                                                onFocus={(e) => e.stopPropagation()}
+                                                                className="pl-10 h-11 bg-background/50"
                                                             />
                                                         </div>
                                                         <Button
-                                                            onClick={() => handleSubscribe(concert)}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleSubscribe(concert);
+                                                            }}
                                                             disabled={isSubmitting}
-                                                            className="gap-2"
+                                                            className="gap-2 h-11 px-5"
                                                         >
                                                             {isSubmitting ? (
                                                                 <Loader2 className="w-4 h-4 animate-spin" />
                                                             ) : (
                                                                 <Bell className="w-4 h-4" />
                                                             )}
-                                                            Varsle meg
+                                                            Varsle
                                                         </Button>
                                                     </div>
                                                 )}
