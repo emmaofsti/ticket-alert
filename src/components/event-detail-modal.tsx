@@ -132,8 +132,8 @@ export function EventDetailModal({ artist, isOpen, onClose }: EventDetailModalPr
                             <div
                                 key={concert.id}
                                 className={`p-4 rounded-lg border transition-all cursor-pointer ${isSelected
-                                        ? 'border-primary bg-primary/5'
-                                        : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-border hover:border-primary/50 hover:bg-muted/50'
                                     }`}
                                 onClick={() => setSelectedConcert(isSelected ? null : concert)}
                             >
@@ -156,8 +156,8 @@ export function EventDetailModal({ artist, isOpen, onClose }: EventDetailModalPr
                                     <Badge
                                         variant={status === 'sold-out' ? 'destructive' : 'secondary'}
                                         className={`shrink-0 ${status === 'available' ? 'bg-green-500/10 text-green-500 border-green-500/30' :
-                                                status === 'few-left' ? 'bg-orange-500/10 text-orange-500 border-orange-500/30' :
-                                                    ''
+                                            status === 'few-left' ? 'bg-orange-500/10 text-orange-500 border-orange-500/30' :
+                                                ''
                                             }`}
                                     >
                                         {status === 'available' && <CheckCircle className="w-3 h-3 mr-1" />}
@@ -170,7 +170,10 @@ export function EventDetailModal({ artist, isOpen, onClose }: EventDetailModalPr
 
                                 {/* Expanded Content */}
                                 {isSelected && (
-                                    <div className="mt-4 pt-4 border-t border-border space-y-4">
+                                    <div
+                                        className="mt-4 pt-4 border-t border-border space-y-4"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
                                         {/* Price */}
                                         {concert.priceRange && (
                                             <div className="text-sm">
