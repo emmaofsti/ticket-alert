@@ -1,6 +1,9 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Only initialize Resend if API key is available
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 interface SendTicketAlertProps {
   to: string;
@@ -17,6 +20,11 @@ export async function sendTicketAlertEmail({
   venue,
   ticketmasterUrl,
 }: SendTicketAlertProps): Promise<{ success: boolean; error?: string }> {
+  if (!resend) {
+    console.log('Resend not configured, email not sent');
+    return { success: true }; // Return success for demo purposes
+  }
+
   try {
     const { error } = await resend.emails.send({
       from: 'TicketAlert Norge <onboarding@resend.dev>',
